@@ -1,0 +1,86 @@
+[
+    {
+        "id": 1,
+        "group":"family",
+        "relation": "mom",
+        "text": "Happy birthday, Ma! My hope is to be the amazing role model for my own family one day as you have been for ours. Your love is the best!"
+    },
+    {
+        "id": 2,
+        "group":"family",
+        "relation": "dad",
+        "text": "Happy birthday dad"
+    },
+    {
+        "id": 3,
+        "group":"family",
+        "relation": "brother",
+        "text": "Happy birthday bro"
+    },
+    {
+        "id": 4,
+        "group":"love",
+        "relation": "girl_friend",
+        "text": "Happy birthday my girl"
+    },
+    {
+        "id": 5,
+        "group":"love",
+        "relation": "boy_friend",
+        "text": "Happy birthday my boy"
+    },
+    {
+        "id": 6,
+        "group":"love",
+        "relation": "wife",
+        "text": "Happy birthday wife"
+    },
+    {
+        "id": 7,
+        "group":"profession",
+        "relation": "boss",
+        "text": "Happy birthday boss"
+    },
+    {
+        "id": 8,
+        "group":"profession",
+        "relation": "colleague",
+        "text": "Happy birthday colleague"
+    },
+    {
+        "id": 9,
+        "group":"friend",
+        "relation": "close friend",
+        "text": "Happy birthday friend"
+    },
+    {
+        "id": 10,
+        "group":"family",
+        "relation": "mom",
+        "text": "You're not just a mom, you're the greatest woman I know"
+    },
+    {
+        "id": 11,
+        "group":"family",
+        "relation": "mom",
+        "text": "So grateful to be able to grow with you, Happy birthday mom"
+    },
+    {
+        "id": 12,
+        "group":"family",
+        "relation": "mom",
+        "text": "Happy birthday mamma, Cheers to a woman full of grace, love, and compassion"
+    },
+    {
+        "id": 13,
+        "group":"family",
+        "relation": "mom",
+        "text": "Mom, thanks for all your support and your invaluable life lessons. Cheers to your best birthday yet!"
+    },
+    {
+        "id": 14,
+        "group":"family",
+        "relation": "mom",
+        "text": "Hope your day is full of relaxation, an abundance of love, and your favorite type of cake."
+    },
+]

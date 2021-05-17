@@ -9,19 +9,13 @@ import UIKit
 import Contacts
 import UserNotifications
 
-struct MonthSection
-{
-    var month: Int
-    var cells: [ContactData]
-}
-
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
+class TabView1Controller: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
     var notification_text = ""
     @IBOutlet weak var contactTableView: UITableView!
     
     let store = CNContactStore()
-    var contacts_extracted: [ContactData] = []
+    public var contacts_extracted: [ContactData] = []
     var contacts_sorted: [ContactData] = []
     var contact_selected: ContactData!
     var birthdays_today = 0
@@ -34,24 +28,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var cur_glb_year: Int = 0
     
     var sections = [MonthSection]()
+//    private let database = Database.database().reference()
     
     let object: [String: Any] = ["name": "Sarath" as NSObject,
                                  "Company": "Bosch"]
     
+//    database.child("something").setValue(object)
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
-//        set the defaults for the name and notification time, reminder
-        let defaults = UserDefaults.standard
-        defaults.set("NaN", forKey: "Name")
-        defaults.set(true, forKey: "Notification")
-        defaults.set(0, forKey:"NotificationHour")
-        defaults.set(0, forKey: "NotificatioMin")
-        defaults.set(0, forKey: "NotificationSec")
-        
-        defaults.set(true, forKey: "Reminder")
-        defaults.set(5, forKey: "ReminderDays")
+        // Do any additional setup after loading the view.
         
         //creating the global current date and month variables
         cur_glb_date = Date()
@@ -85,8 +71,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         sortDatesWithRespectToCurDay()
         
-//        write and call a method to group the contacts sorted into sections of month
-        
         calculateRemainingDays()
         
         todayBirthdayCount()
@@ -99,14 +83,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         print("birthday count is ", (birthdays_today))
         
-//        var index = 0
-//
-//        while index <= birthdays_today-1
-//        {
-//            throwNotification(index: index)
-//            index = index + 1
-//        }
-        
+        for each_contact in contacts_sorted
+        {
+            if(each_contact.today)
+            {
+                throwNotification(each_contact: each_contact)
+            }
+        }
         createSections()
     }
     
@@ -177,10 +160,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
 //    Function to throw the notification
-    func throwNotification(index: Int)
+    func throwNotification(each_contact: ContactData)
     {
         //prepare the notification text
-        prepareNotificationText(index: index)
+        prepareNotificationText(each_contact: each_contact)
         
         //create the notification content
         let content = UNMutableNotificationContent()
@@ -189,9 +172,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
         //create the trigger
         var dateComponent = DateComponents()
-        dateComponent.hour = 11
-        dateComponent.minute = 00
-        dateComponent.second = 00
+        dateComponent.hour = 15
+        dateComponent.minute = 56
+        dateComponent.second = 45
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: true)
                 
         //creation of request
@@ -205,17 +188,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    func prepareNotificationText(index: Int)
+    func prepareNotificationText(each_contact: ContactData)
     {
-        if(contacts_sorted[index].year != 0)
+        if(each_contact.year != 0)
         {
-            let years = cur_glb_year - contacts_sorted[index].year
-            notification_text = "\(contacts_sorted[index].first_name) is turning \(years) today"
+            let years = cur_glb_year - each_contact.year
+            notification_text = "\(each_contact.first_name) is turning \(years) today"
         }
         else
         {
-            notification_text = "\(contacts_sorted[index].first_name)`s birthday is today"
+            notification_text = "\(each_contact.first_name)`s birthday is today"
         }
+        
     }
     
     //counts the number of people celebrating the birthday today
@@ -229,7 +213,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             if(each_contact.month == cur_month && each_contact.day == cur_day)
             {
-                birthdays_today = birthdays_today + 1 
+                each_contact.today = true
+                birthdays_today = birthdays_today + 1
+                notification_text = "\(notification_text) \(each_contact.first_name), "
+            }
+            else
+            {
+                each_contact.today = false
             }
         }
     }
@@ -358,11 +348,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             {
                 contact_image = UIImage(data: con.imageData!)
             }
-            else
-            {
-//                print("picture not found")
-                //contact_image = UIImage(named: "blank_pic")
-            }
             if(con.phoneNumbers.count != 0)
             {
                 phone_num = con.phoneNumbers[0].value.stringValue
@@ -378,6 +363,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 let year: Int = con.birthday?.year ?? 0
                 let dobDt = Calendar.current.date(from: con.birthday!)
                 
+                
                 let each_contact = ContactData(image: contact_image!,
                                                first_name: con.givenName,
                                                last_name: con.familyName,
@@ -387,19 +373,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                                phone_num: phone_num)
                 
                 contacts_extracted.append(each_contact)
-//                print("Dob : \(dat.string(from: dobDt!))")
             }
         }
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int
-    {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return sections[section].cells.count
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         var cell = contactTableView.dequeueReusableCell(withIdentifier: "eachContactCell") as! EachContactCell
@@ -447,24 +433,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             cell.numberOfDays.text = "\(sections[indexPath.section].cells[indexPath.row].days_remaining)"
         }
-        
         return cell
     }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    {
         return getMonth(date: sections[section].month)
     }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
-    {
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100))
-        headerView.backgroundColor = .black
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
+        headerView.backgroundColor = UIColor(red: 0.811, green: 0.811, blue: 0.811, alpha: 1.00)
+        
+        let headerTitle = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width-20, height: 30))
+        headerTitle.text = getMonth(date:  sections[section].month)
+        headerView.addSubview(headerTitle)
         return headerView
     }
+    
     @objc func wishButtonAction(sender: UIButton)
     {
         let indexPath = IndexPath(row: sender.tag, section: 0)
         let cell = contacts_sorted[indexPath.row]
         print("Please change myself " + cell.first_name)
-        print("In tab view")
         contact_selected = contacts_sorted[indexPath.row]
 //        performSegue(withIdentifier: "segue_contact", sender: self)
     }
@@ -480,17 +471,5 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         print("button is pressed " + sections[indexPath.section].cells[indexPath.row].first_name)
         contact_selected = sections[indexPath.section].cells[indexPath.row]
         performSegue(withIdentifier: "segue_contact", sender: self)
-    }
-    
-}
-
-extension Date
-{
-    func get(_ components: Calendar.Component..., calendar: Calendar = Calendar.current) -> DateComponents {
-        return calendar.dateComponents(Set(components), from: self)
-    }
-
-    func get(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
-        return calendar.component(component, from: self)
     }
 }
