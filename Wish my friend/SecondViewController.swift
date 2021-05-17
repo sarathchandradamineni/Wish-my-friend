@@ -8,7 +8,7 @@
 import UIKit
 
 
-class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
+class SecondViewController: UIViewController
 {
     var name: String = ""
     var last_name: String = ""
@@ -17,7 +17,6 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var app_selected: String = ""
     var phone_num: String = ""
     
-    @IBOutlet weak var gifBirthdayBg: UIImageView!
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var wishes_items: [Wishes]?
     
@@ -31,103 +30,14 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var profession_wishes = [WishesStructure]()
     var friends_wishes = [WishesStructure]()
     var result_wishes = [WishesStructure]()
-
-
-    @IBOutlet weak var profession_button: UIButton!
-    @IBOutlet weak var friends_button: UIButton!
-    @IBOutlet weak var love_button: UIButton!
-    @IBOutlet weak var family_button: UIButton!
     
     @IBOutlet weak var usEuZodiac: UIImageView!
     @IBOutlet weak var usEuZodiacLabel: UILabel!
     
     @IBOutlet weak var chineseZodiac: UIImageView!
     @IBOutlet weak var chineseZodiacLabel: UILabel!
-    @IBOutlet weak var wishTableView: UITableView!
     
-    @IBAction func familyButtonPress(_ sender: Any) {
-        performSegue(withIdentifier: "wishWithTextSegue", sender: self)
-    }
     
-    @IBAction func love_button(_ sender: Any)
-    {
-        if(love_button.backgroundColor == .white)
-        {
-            love_button.backgroundColor = .yellow
-        }
-        else
-        {
-            love_button.backgroundColor = .white
-        }
-        print("love button is pressed")
-        for each_wish in json_wishes
-        {
-            if(each_wish.group == "love")
-            {
-                love_wishes.append(each_wish)
-            }
-        }
-        
-        result_wishes.removeAll()
-        result_wishes = love_wishes
-        
-        self.wishTableView.reloadData()
-        
-        print(love_wishes)
-    }
-    
-    @IBAction func profession_button(_ sender: Any)
-    {
-        if(profession_button.backgroundColor == .white)
-        {
-            profession_button.backgroundColor = .yellow
-        }
-        else
-        {
-            profession_button.backgroundColor = .white
-        }
-        print("profession button is pressed")
-        for each_wish in json_wishes
-        {
-            if(each_wish.group == "profession")
-            {
-                profession_wishes.append(each_wish)
-            }
-        }
-        
-        result_wishes.removeAll()
-        result_wishes = profession_wishes
-        
-        self.wishTableView.reloadData()
-        print(profession_wishes)
-    }
-    
-    @IBAction func friends_button(_ sender: Any)
-    {
-        if(friends_button.backgroundColor == .white)
-        {
-            friends_button.backgroundColor = .yellow
-        }
-        else
-        {
-            friends_button.backgroundColor = .white
-        }
-        print("friends button is pressed")
-        for each_wish in json_wishes
-        {
-            if(each_wish.group == "friend")
-            {
-                friends_wishes.append(each_wish)
-            }
-        }
-        
-        result_wishes.removeAll()
-        result_wishes = friends_wishes
-        
-        self.wishTableView.reloadData()
-        
-        print(friends_wishes)
-    }
     
     override func viewDidLoad()
     {
@@ -148,24 +58,6 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         secondViewImage.layer.masksToBounds = true
         secondViewImage.layer.cornerRadius = secondViewImage.bounds.width / 2
         
-        //setting the corner radius of the family button
-        family_button.layer.masksToBounds = true
-        family_button.layer.cornerRadius = 15
-        
-        //setting the corner radius of the love button
-        love_button.layer.masksToBounds = true
-        love_button.layer.cornerRadius = 15
-        
-        //setting the corner radius of the friends button
-        friends_button.layer.masksToBounds = true
-        friends_button.layer.cornerRadius = 15
-        
-        //setting the corner radius of the profession button
-        profession_button.layer.masksToBounds = true
-        profession_button.layer.cornerRadius = 15
-        
-        wishTableView.dataSource = self
-        wishTableView.delegate = self
         
         json_wishes = WishesLoader().wishes
         result_wishes = json_wishes
@@ -181,24 +73,6 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         ]
     }
     
-    
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return result_wishes.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        let wish_cell = wishTableView.dequeueReusableCell(withIdentifier: "eachWishCell") as! EachWishCell
-        wish_cell.wishLabel.text = result_wishes[indexPath.row].text
-        return wish_cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let items = [result_wishes[indexPath.row].text + " -\n"+(defaults.string(forKey: "Name")!) ?? "NaN"]
-        let ac = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        present(ac, animated: true)
-    }
     
     func getMonth(date: Int) -> String
     {
