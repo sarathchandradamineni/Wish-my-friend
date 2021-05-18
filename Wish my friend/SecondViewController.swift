@@ -17,6 +17,8 @@ class SecondViewController: UIViewController
     var app_selected: String = ""
     var phone_num: String = ""
     
+    @IBOutlet weak var wishWithTextButton: UIButton!
+    @IBOutlet weak var wishWithCardButton: UIButton!
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var wishes_items: [Wishes]?
     
@@ -73,6 +75,9 @@ class SecondViewController: UIViewController
         ]
     }
     
+    @IBAction func wishWithTextClick(_ sender: Any) {
+        performSegue(withIdentifier: "wishWithTextSegue", sender: self)
+    }
     
     func getMonth(date: Int) -> String
     {

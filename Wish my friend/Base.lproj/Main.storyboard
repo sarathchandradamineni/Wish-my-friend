@@ -354,6 +354,9 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2sB-0h-VQ9">
                                                 <rect key="frame" x="0.0" y="0.0" width="214" height="100"/>
                                                 <state key="normal" title="Wish with message"/>
+                                                <connections>
+                                                    <action selector="wishWithTextClick:" destination="nI8-0A-Vq1" eventType="touchUpInside" id="gcJ-8j-Mrf"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7tB-YV-ywa">
                                                 <rect key="frame" x="214" y="0.0" width="214" height="100"/>
@@ -397,6 +400,8 @@
                         <outlet property="secondViewLabel" destination="2kZ-jV-oWn" id="7Aw-gw-Cvu"/>
                         <outlet property="usEuZodiac" destination="igc-ku-BVt" id="yvD-aU-vbO"/>
                         <outlet property="usEuZodiacLabel" destination="u3D-uf-EoB" id="Irn-zY-F8a"/>
+                        <outlet property="wishWithCardButton" destination="7tB-YV-ywa" id="iez-V8-6hp"/>
+                        <outlet property="wishWithTextButton" destination="2sB-0h-VQ9" id="s3E-qX-Tf1"/>
                         <segue destination="fxX-1X-ZU6" kind="show" identifier="wishWithCardSegue" id="H8w-N7-19Y"/>
                         <segue destination="vmW-HA-add" kind="show" identifier="wishWithTextSegue" id="NSO-NZ-q7o"/>
                     </connections>
